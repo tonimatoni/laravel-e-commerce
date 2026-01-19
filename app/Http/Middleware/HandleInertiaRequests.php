@@ -53,7 +53,7 @@ class HandleInertiaRequests extends Middleware
             
             $cartData = [
                 'items' => $cartItems,
-                'count' => $cartItems->count(),
+                'count' => $request->user()->cartItems()->sum('quantity'),
             ];
         } else {
             $cartData = [

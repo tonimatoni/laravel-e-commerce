@@ -1,8 +1,26 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import StockStatus from '@/Components/StockStatus';
+import PrimaryButton from '@/Components/PrimaryButton';
+import { useState } from 'react';
 
-export default function Index({ products }) {
+export default function Index({ products, flash }) {
+    const [processing, setProcessing] = useState({});
+
+    const handleAddToCart = (productId) => {
+        setProcessing({ ...processing, [productId]: true });
+
+        router.post('/cart', {
+            product_id: productId,
+            quantity: 1,
+        }, {
+            preserveScroll: true,
+            onFinish: () => {
+                setProcessing({ ...processing, [productId]: false });
+            },
+        });
+    };
+
     return (
         <AuthenticatedLayout
             header={
@@ -45,12 +63,36 @@ export default function Index({ products }) {
                                             </span>
                                         </div>
                                         
-                                        <div className="flex items-center justify-between">
+                                        <div className="flex items-center justify-between mb-4">
                                             <StockStatus stockQuantity={product.stock_quantity} />
                                         </div>
+                                        
+                                        <PrimaryButton
+                                            onClick={() => handleAddToCart(product.id)}
+                                            disabled={product.stock_quantity === 0 || processing[product.id]}
+                                            className="w-full"
+                                        >
+                                            {processing[product.id] ? 'Adding...' : product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+                                        </PrimaryButton>
                                     </div>
                                 </div>
                             ))}
+                        </div>
+                    )}
+
+                    {flash?.success && (
+                        <div className="mt-4 rounded-md bg-green-50 p-4">
+                            <div className="text-sm text-green-800">
+                                {flash.success}
+                            </div>
+                        </div>
+                    )}
+
+                    {flash?.error && (
+                        <div className="mt-4 rounded-md bg-red-50 p-4">
+                            <div className="text-sm text-red-800">
+                                {flash.error}
+                            </div>
                         </div>
                     )}
 
