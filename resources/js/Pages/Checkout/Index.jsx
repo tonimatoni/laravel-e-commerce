@@ -353,7 +353,10 @@ export default function Index({ cartItems = [], subtotal = 0, tax = 0, total = 0
                                 </div>
                                 <div className="divide-y divide-gray-200">
                                     {cartItems.map((item) => {
-                                        const itemSubtotal = item.quantity * parseFloat(item.product.price);
+                                        const productPrice = item.product.has_active_discount 
+                                            ? parseFloat(item.product.discounted_price) 
+                                            : parseFloat(item.product.price);
+                                        const itemSubtotal = item.quantity * productPrice;
                                         return (
                                             <div key={item.id} className="p-4">
                                                 <div className="flex justify-between">
@@ -362,7 +365,12 @@ export default function Index({ cartItems = [], subtotal = 0, tax = 0, total = 0
                                                             {item.product.name}
                                                         </p>
                                                         <p className="text-xs text-gray-500">
-                                                            Qty: {item.quantity} × ${parseFloat(item.product.price).toFixed(2)}
+                                                            Qty: {item.quantity} × ${productPrice.toFixed(2)}
+                                                            {item.product.has_active_discount && (
+                                                                <span className="ml-1 px-1 text-xs font-semibold text-white bg-red-600 rounded">
+                                                                    -{parseFloat(item.product.discount_percentage).toFixed(0)}%
+                                                                </span>
+                                                            )}
                                                         </p>
                                                     </div>
                                                     <p className="text-sm font-medium text-gray-900">

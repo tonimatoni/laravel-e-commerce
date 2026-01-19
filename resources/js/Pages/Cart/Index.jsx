@@ -50,7 +50,10 @@ export default function Index({ cartItems = [], subtotal = 0, tax = 0, total = 0
                             </div>
                             <div className="divide-y divide-gray-200">
                                 {cartItems.map((item) => {
-                                    const itemSubtotal = item.quantity * parseFloat(item.product.price);
+                                    const productPrice = item.product.has_active_discount 
+                                        ? parseFloat(item.product.discounted_price) 
+                                        : parseFloat(item.product.price);
+                                    const itemSubtotal = item.quantity * productPrice;
                                     return (
                                         <div key={item.id} className="p-4 sm:p-6">
                                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -58,9 +61,21 @@ export default function Index({ cartItems = [], subtotal = 0, tax = 0, total = 0
                                                     <h4 className="text-base sm:text-lg font-medium text-gray-900">
                                                         {item.product.name}
                                                     </h4>
-                                                    <p className="text-sm text-gray-600 mt-1">
-                                                        ${parseFloat(item.product.price).toFixed(2)} each
-                                                    </p>
+                                                    <div className="text-sm text-gray-600 mt-1">
+                                                        {item.product.has_active_discount ? (
+                                                            <div className="flex items-center gap-2">
+                                                                <span>${productPrice.toFixed(2)} each</span>
+                                                                <span className="px-1.5 py-0.5 text-xs font-semibold text-white bg-red-600 rounded">
+                                                                    -{parseFloat(item.product.discount_percentage).toFixed(0)}%
+                                                                </span>
+                                                                <span className="text-xs text-gray-400 line-through">
+                                                                    ${parseFloat(item.product.price).toFixed(2)}
+                                                                </span>
+                                                            </div>
+                                                        ) : (
+                                                            <span>${productPrice.toFixed(2)} each</span>
+                                                        )}
+                                                    </div>
                                                     <p className="text-xs text-gray-500 mt-1 sm:hidden">
                                                         Quantity: {item.quantity}
                                                     </p>

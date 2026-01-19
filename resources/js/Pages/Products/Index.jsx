@@ -61,9 +61,27 @@ export default function Index({ products, flash }) {
                                         )}
                                         
                                         <div className="flex items-center justify-between mb-4">
-                                            <span className="text-2xl font-bold text-gray-900">
-                                                ${parseFloat(product.price).toFixed(2)}
-                                            </span>
+                                            <div className="flex flex-col">
+                                                {product.has_active_discount ? (
+                                                    <>
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="text-2xl font-bold text-gray-900">
+                                                                ${parseFloat(product.discounted_price).toFixed(2)}
+                                                            </span>
+                                                            <span className="px-2 py-1 text-xs font-semibold text-white bg-red-600 rounded">
+                                                                -{parseFloat(product.discount_percentage).toFixed(0)}%
+                                                            </span>
+                                                        </div>
+                                                        <span className="text-sm text-gray-500 line-through">
+                                                            ${parseFloat(product.price).toFixed(2)}
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <span className="text-2xl font-bold text-gray-900">
+                                                        ${parseFloat(product.price).toFixed(2)}
+                                                    </span>
+                                                )}
+                                            </div>
                                             <StockStatus stockQuantity={product.stock_quantity} />
                                         </div>
                                         
