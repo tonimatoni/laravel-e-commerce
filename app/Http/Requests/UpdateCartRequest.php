@@ -3,19 +3,17 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class AddToCartRequest extends FormRequest
+class UpdateCartRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->route('cartItem')->user_id === $this->user()->id;
     }
 
     public function rules(): array
     {
         return [
-            'product_id' => ['required', 'integer', Rule::exists('products', 'id')->where('is_active', true)],
             'quantity' => ['required', 'integer', 'min:1', 'max:999'],
         ];
     }
@@ -23,9 +21,6 @@ class AddToCartRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'product_id.required' => 'Please select a product.',
-            'product_id.exists' => 'The selected product does not exist or is not available.',
-            'product_id.integer' => 'Product ID must be a valid number.',
             'quantity.required' => 'Please specify a quantity.',
             'quantity.integer' => 'Quantity must be a whole number.',
             'quantity.min' => 'Quantity must be at least 1.',
