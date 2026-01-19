@@ -69,4 +69,9 @@ class Product extends Model
     {
         return $this->stock_quantity === 0;
     }
+
+    protected function setStockQuantityAttribute(int|null $value): void
+    {
+        $this->attributes['stock_quantity'] = max(0, $value ?? 0);
+    }
 }
