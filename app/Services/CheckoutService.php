@@ -96,11 +96,13 @@ class CheckoutService
                     throw new \Exception("Insufficient stock for {$product->name}. Available: {$product->stock_quantity}");
                 }
 
+                $itemPrice = $product->hasActiveDiscount() ? $product->discounted_price : $product->price;
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $product->id,
                     'quantity' => $cartItem->quantity,
-                    'price' => $product->price,
+                    'price' => $itemPrice,
                     'product_name' => $product->name,
                     'product_sku' => $product->sku,
                 ]);

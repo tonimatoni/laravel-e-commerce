@@ -53,7 +53,9 @@ class CartService
             ->with('product')
             ->get()
             ->sum(function ($item) {
-                return $item->quantity * $item->product->price;
+                $product = $item->product;
+                $price = $product->hasActiveDiscount() ? $product->discounted_price : $product->price;
+                return $item->quantity * $price;
             });
     }
 
