@@ -1,5 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
+import StockStatus from '@/Components/StockStatus';
 
 export default function Index({ products }) {
     return (
@@ -42,25 +43,10 @@ export default function Index({ products }) {
                                             <span className="text-2xl font-bold text-gray-900">
                                                 ${parseFloat(product.price).toFixed(2)}
                                             </span>
-                                            <span className="text-sm text-gray-600">
-                                                Stock: {product.stock_quantity}
-                                            </span>
                                         </div>
                                         
                                         <div className="flex items-center justify-between">
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                product.stock_quantity === 0
-                                                    ? 'bg-red-100 text-red-800'
-                                                    : product.stock_quantity < 5
-                                                    ? 'bg-yellow-100 text-yellow-800'
-                                                    : 'bg-green-100 text-green-800'
-                                            }`}>
-                                                {product.stock_quantity === 0
-                                                    ? 'Out of Stock'
-                                                    : product.stock_quantity < 5
-                                                    ? 'Low Stock'
-                                                    : 'In Stock'}
-                                            </span>
+                                            <StockStatus stockQuantity={product.stock_quantity} />
                                         </div>
                                     </div>
                                 </div>
