@@ -15,6 +15,9 @@ export default function Index({ products, flash }) {
             quantity: 1,
         }, {
             preserveScroll: true,
+            onSuccess: () => {
+                router.reload();
+            },
             onFinish: () => {
                 setProcessing({ ...processing, [productId]: false });
             },
@@ -44,9 +47,9 @@ export default function Index({ products, flash }) {
                             {products.data.map((product) => (
                                 <div
                                     key={product.id}
-                                    className="overflow-hidden bg-white shadow-sm rounded-lg transition-shadow hover:shadow-md"
+                                    className="flex flex-col overflow-hidden bg-white shadow-sm rounded-lg transition-shadow hover:shadow-md"
                                 >
-                                    <div className="p-6">
+                                    <div className="flex flex-col flex-grow p-6">
                                         <h3 className="text-lg font-semibold text-gray-900 mb-2">
                                             {product.name}
                                         </h3>
@@ -61,19 +64,18 @@ export default function Index({ products, flash }) {
                                             <span className="text-2xl font-bold text-gray-900">
                                                 ${parseFloat(product.price).toFixed(2)}
                                             </span>
-                                        </div>
-                                        
-                                        <div className="flex items-center justify-between mb-4">
                                             <StockStatus stockQuantity={product.stock_quantity} />
                                         </div>
                                         
-                                        <PrimaryButton
-                                            onClick={() => handleAddToCart(product.id)}
-                                            disabled={product.stock_quantity === 0 || processing[product.id]}
-                                            className="w-full"
-                                        >
-                                            {processing[product.id] ? 'Adding...' : product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
-                                        </PrimaryButton>
+                                        <div className="mt-auto">
+                                            <PrimaryButton
+                                                onClick={() => handleAddToCart(product.id)}
+                                                disabled={product.stock_quantity === 0 || processing[product.id]}
+                                                className="w-full"
+                                            >
+                                                {processing[product.id] ? 'Adding...' : product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+                                            </PrimaryButton>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
